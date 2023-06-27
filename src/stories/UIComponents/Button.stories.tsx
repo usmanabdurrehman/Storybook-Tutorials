@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-
-import { Button } from "./Button";
+import { Button } from "../Button";
 import { expect } from "@storybook/jest";
 import { within, userEvent } from "@storybook/testing-library";
+
+import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 
 const meta = {
   component: Button,
@@ -11,30 +11,32 @@ const meta = {
   },
 } satisfies Meta<typeof Button>;
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+// const Template: StoryFn<typeof Button> = (args) => <Button {...args} />;
+
+// export const Base = Template.bind({});
+
+// Base.args = {
+//   label: "Sign up",
+// };
 
 const baseParams = {
-  parameters: {
-    backgrounds: { values: [{ name: "black", value: "#000" }] },
-  },
+  parameters: { backgrounds: { values: [{ name: "black", value: "#000" }] } },
 };
 
-export const Base = {
+export const Base: StoryObj<typeof Button> = {
   ...baseParams,
   args: { label: "Sign up" },
 };
 
-export const Colored: Story = {
-  ...baseParams,
-  args: { label: "Sign up", backgroundColor: "#f7ff00" },
-};
-
-export const TestButton: Story = {
-  args: { label: "Click Me" },
+export const TestButton: StoryObj<typeof Button> = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByTestId("button"));
     await expect(args.onClick).toHaveBeenCalled();
   },
+  args: {
+    label: "Click Me",
+  },
 };
+
+export default meta;
